@@ -17,6 +17,11 @@ class Post extends Model
         'published',
     ];
 
+    protected $casts = [
+        'tags' => 'array',
+        'published' => 'boolean',
+    ];
+
     public function category()
     {
         return $this->belongsTo(Category::class);
