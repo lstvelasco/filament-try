@@ -49,7 +49,7 @@ class PostResource extends Resource
                         ])->required(),
                         TextInput::make('slug')->unique(ignoreRecord: true)->required(),
                         Select::make('category_id')
-                            ->options(Category::all()->pluck('name', 'id'))
+                            ->relationship('category', 'name')
                             ->required()
                             ->searchable()
                             ->label('Category'),
