@@ -47,7 +47,7 @@ class PostResource extends Resource
                             'min:2',
                             'max:10',
                         ])->required(),
-                        TextInput::make('slug')->unique(ignoreRecord:true)->required(),
+                        TextInput::make('slug')->unique(ignoreRecord: true)->required(),
                         Select::make('category_id')
                             ->options(Category::all()->pluck('name', 'id'))
                             ->required()
@@ -80,20 +80,22 @@ class PostResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('id'),
-                ImageColumn::make('thumbnail'),
-                ColorColumn::make('color'),
-                TextColumn::make('title'),
-                TextColumn::make('slug'),
-                TagsColumn::make('tags'),
-                TextColumn::make('category.name'),
-                CheckboxColumn::make('published'),
+                TextColumn::make('id')->sortable()->toggleable(isToggledHiddenByDefault: true),
+                ImageColumn::make('thumbnail')->toggleable(),
+                ColorColumn::make('color')->toggleable(),
+                TextColumn::make('title')->sortable()->searchable()->toggleable(),
+                TextColumn::make('slug')->sortable()->searchable()->toggleable(),
+                TagsColumn::make('tags')->toggleable(),
+                TextColumn::make('category.name')->sortable()->searchable()->toggleable(),
+                CheckboxColumn::make('published')->toggleable(),
+                TextColumn::make('created_at')->label('Created on')->dateTime('F j,Y h:m A')->sortable()->searchable()->toggleable(),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
