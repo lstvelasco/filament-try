@@ -15,6 +15,8 @@ use Filament\Forms\Components\Group;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Tabs;
+use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -40,10 +42,8 @@ class PostResource extends Resource
     {
         return $form
             ->schema([
-                Section::make('Create post')
-                    ->description('create post over here.')
-                    ->collapsible()
-                    ->schema([
+                Tabs::make('Create New Post')->tabs([
+                    Tab::make('Tab 1')->icon('heroicon-o-rectangle-stack')->schema([
                         TextInput::make('title')->rules([
                             'min:2',
                             'max:10',
@@ -55,33 +55,21 @@ class PostResource extends Resource
                             ->searchable()
                             ->label('Category'),
                         ColorPicker::make('color')->required(),
-                        MarkdownEditor::make('content')->required()->columnSpanFull(),
-                    ])->columnSpan(2)->columns(2),
-
-                Group::make()
-                    ->schema([
-                        Section::make('Image')
-                            ->collapsed()
-                            ->schema([
-                                FileUpload::make('thumbnail')
-                                    ->disk('public')
-                                    ->directory('thumbnails')
-                                    ->required(),
-                            ])->columnSpan(1),
-                        Section::make('Meta')
-                            ->schema([
-                                TagsInput::make('tags')->required(),
-                                Checkbox::make('published'),
-                            ]),
-                        // Section::make('Authors')
-                        //     ->schema([
-                        //         Select::make('authors')
-                        //             ->label('Co Authors')
-                        //             ->multiple()
-                        //             ->relationship('authors', 'name')
-                        //     ])
                     ]),
-            ])->columns(3);
+                    Tab::make('Content')->schema([
+                        MarkdownEditor::make('content')->required()->columnSpanFull(),
+                    ]),
+                    Tab::make('Meta')->schema([
+                        FileUpload::make('thumbnail')
+                            ->disk('public')
+                            ->directory('thumbnails')
+                            ->required(),
+                        TagsInput::make('tags')->required(),
+                        Checkbox::make('published'),
+                    ])
+                ])->activeTab(3)->persistTabInQueryString(),
+
+            ])->columns(1);
     }
 
     public static function table(Table $table): Table
