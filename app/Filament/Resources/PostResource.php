@@ -27,6 +27,9 @@ use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TagsColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -87,7 +90,16 @@ class PostResource extends Resource
                 TextColumn::make('created_at')->label('Created on')->dateTime('F j,Y h:m A')->sortable()->searchable()->toggleable(),
             ])
             ->filters([
-                //
+                // Filter::make('Published Posts')->query(
+                //     function ($query) {
+                //         $query->where('published', true);
+                //     }
+                // ),
+                TernaryFilter::make('published'),
+                SelectFilter::make('category_id')
+                    ->relationship('category', 'name')
+                    ->label('Category')
+                    
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
